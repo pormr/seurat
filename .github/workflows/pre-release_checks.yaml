@@ -1,21 +1,18 @@
+name: Pre-Release Checks
+
+# Once the default branch for satijalab/seurat has been updated to from 
+# `master` to `main` this workflow will be triggered on `workflow_dispatch`.
+# Until then, we'll manually rebase this branch onto whatever branch
+# we'd like to run the workflow against.
 on:
-  workflow_dispatch:
-    inputs:
-      which:
-        type: choice
-        description: Which dependents to check
-        options:
-          - strong
-          - most
-
-name: Reverse dependency check
-
+  push:
+    branches:
+      - check/pre-release
+    
+# Runs a reverse dependency check similar to CRAN, for more details see 
+# https://github.com/r-devel/recheck. 
 jobs:
-  revdep_check:
-    name: Reverse check ${{ inputs.which }} dependents
+  check-reverse-dependencies:
     uses: r-devel/recheck/.github/workflows/recheck.yml@v1
     with:
-      which: ${{ inputs.which }}
-      subdirectory: '' # set if your R package is in a subdir of the git repo
-      repository: '' # set to recheck an R package from another git repo
-      ref: '' # set to recheck a custom tag/branch from another repo
+      which: most
